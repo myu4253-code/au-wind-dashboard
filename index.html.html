@@ -1,356 +1,65 @@
+
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🌏 澳洲风机项目状态看板</title>
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Segoe UI', 'PingFang SC', 'Helvetica Neue', Arial, sans-serif; background: #0f1117; color: #e2e8f0; min-height: 100vh; }
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, viewport-fit=cover"
+    />
+    <title>Envision</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <style>
+      body {
+        overflow: hidden;
+      }
 
-  .header { background: linear-gradient(135deg, #1a2744 0%, #0f3460 50%, #16213e 100%); padding: 28px 40px 20px; border-bottom: 2px solid #2d4a7a; }
-  .header h1 { font-size: 26px; font-weight: 700; color: #7dd3fc; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
-  .header-sub { color: #94a3b8; font-size: 13px; margin-top: 6px; }
-  .header-stats { display: flex; gap: 24px; margin-top: 16px; flex-wrap: wrap; }
-  .stat-badge { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 8px 18px; text-align: center; }
-  .stat-badge .num { font-size: 22px; font-weight: 700; color: #38bdf8; }
-  .stat-badge .label { font-size: 11px; color: #94a3b8; margin-top: 2px; }
+      #root {
+        width: 100%;
+        height: 100%;
+        color: #3e3e47;
+        font-size: 14px;
+        font-weight: 500;
+        font-family: -apple-system, BlinkMacSystemFont,
+          "San Francisco”, ”Helvetica Neue", "Helvetica", "Segoe UI", "Arial",
+          "Tahoma", "PingFang SC", "苹方", "Microsoft YaHei", "微软雅黑",
+          "Hiragino Sans GB", "Roboto", "Apple Color Emoji", "Segoe UI Emoji";
+        -webkit-font-smoothing: antialiased;
+        line-height: 1;
+      }
 
-  .section { padding: 24px 40px 0; }
-  .section-title { font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 10px; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 2px solid; }
-  .section-opp .section-title { color: #34d399; border-color: #059669; }
-  .section-leads .section-title { color: #a78bfa; border-color: #7c3aed; }
+      ::-webkit-scrollbar {
+        height: 12px;
+        width: 12px;
+      }
 
-  .table-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid #1e3a5f; margin-bottom: 32px; }
-  table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
-  thead tr { background: #1e2d45; }
-  thead th { padding: 10px 12px; text-align: left; font-weight: 600; color: #93c5fd; white-space: nowrap; border-bottom: 2px solid #2d4a7a; font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.5px; }
-  tbody tr { border-bottom: 1px solid #1a2744; transition: background 0.15s; }
-  tbody tr:hover { background: rgba(255,255,255,0.04); }
-  tbody tr:last-child { border-bottom: none; }
-  td { padding: 9px 12px; vertical-align: top; line-height: 1.5; }
+      ::-webkit-scrollbar-thumb {
+        cursor: pointer;
+        border-radius: 12px;
+        border: 3px solid transparent;
+        background-color: rgba(216, 217, 230, 1);
+        background-clip: content-box;
+      }
 
-  .badge { display: inline-block; padding: 2px 9px; border-radius: 4px; font-size: 11px; font-weight: 600; white-space: nowrap; }
-  .s-active      { background: #064e3b; color: #6ee7b7; border: 1px solid #10b981; }
-  .s-signed      { background: #1e3a5f; color: #93c5fd; border: 1px solid #3b82f6; }
-  .s-shortlisted { background: #1c3d5a; color: #7dd3fc; border: 1px solid #0ea5e9; }
-  .s-preawarded  { background: #1a3a2a; color: #4ade80; border: 1px solid #22c55e; }
-  .s-awarded     { background: #14532d; color: #4ade80; border: 1px solid #16a34a; }
-  .s-suspend     { background: #3b2a0a; color: #fbbf24; border: 1px solid #f59e0b; }
-  .s-cancel      { background: #2d1a1a; color: #f87171; border: 1px solid #ef4444; }
-  .s-bidlost     { background: #3b0f0f; color: #fca5a5; border: 1px solid #dc2626; }
-  .s-close-cust  { background: #3b2a0a; color: #fb923c; border: 1px solid #f97316; }
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(216, 217, 230, 1);
+      }
+    </style>
+    <link rel="stylesheet" href="/umi.ecb67255.css" />
+    <script>
+      window.routerBase = "/";
+    </script>
+    <script>
+      //! umi version: 3.5.37
+    </script>
+  </head>
+  <body>
+    <noscript>Use Chrome browser</noscript>
+    <div id="root"></div>
 
-  .ss1 { background: #1c1c3b; color: #a5b4fc; border: 1px solid #6366f1; }
-  .ss2 { background: #1c3b3b; color: #67e8f9; border: 1px solid #06b6d4; }
-  .ss3 { background: #1c3b2a; color: #6ee7b7; border: 1px solid #10b981; }
-  .ss4 { background: #2a1c3b; color: #c4b5fd; border: 1px solid #8b5cf6; }
-  .ss5 { background: #1a3a1a; color: #86efac; border: 1px solid #22c55e; }
-  .ss6 { background: #1a2a3a; color: #7dd3fc; border: 1px solid #0ea5e9; }
-  .ss7 { background: #2a1a1a; color: #fca5a5; border: 1px solid #ef4444; }
-  .leads-badge { background: #2e1a4a; color: #c4b5fd; border: 1px solid #8b5cf6; }
-
-  .wr-high   { background: #14532d; color: #4ade80; border: 1px solid #16a34a; }
-  .wr-medium { background: #1c3d5a; color: #93c5fd; border: 1px solid #3b82f6; }
-  .wr-low    { background: #3b1a0a; color: #fb923c; border: 1px solid #ea580c; }
-  .wr-tbd    { background: #1e2535; color: #94a3b8; border: 1px solid #475569; }
-
-  .cap { font-weight: 600; color: #f0f9ff; }
-  .cap-xl { color: #fbbf24; }
-  .cap-l  { color: #34d399; }
-  .cap-m  { color: #7dd3fc; }
-  .cap-s  { color: #a5b4fc; }
-
-  .txt-cell { max-width: 200px; word-break: break-word; font-size: 11.5px; color: #cbd5e1; }
-  .txt-cell-compact { max-width: 160px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
-  .date { color: #94a3b8; font-size: 11.5px; white-space: nowrap; }
-  .client { font-weight: 600; color: #e2e8f0; }
-  .pjtname { color: #7dd3fc; font-size: 11.5px; }
-  .empty { color: #475569; font-style: italic; font-size: 11px; }
-
-  tr.row-ss5 td:not(:first-child) { background: rgba(34,197,94,0.05); }
-  tr.row-bidlost td:not(:first-child) { background: rgba(220,38,38,0.05); }
-  tr.row-cancel td:not(:first-child) { background: rgba(239,68,68,0.04); }
-  tr.row-suspend td:not(:first-child) { background: rgba(245,158,11,0.04); }
-
-  .footer { text-align: center; padding: 24px; color: #4b5563; font-size: 11px; border-top: 1px solid #1e2d45; margin-top: 8px; }
-
-  .legend { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 40px 18px; }
-  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #94a3b8; }
-  .legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
-
-  .note-tag { background: #1e3a5f; color: #93c5fd; font-size: 10px; padding: 1px 6px; border-radius: 3px; margin-left: 6px; }
-</style>
-</head>
-<body>
-
-<div class="header">
-  <h1>🌏 澳洲风机机会点 &amp; 线索状态看板</h1>
-  <div class="header-sub">数据来源：国际风机线索与机会点项目管理 · 团队归属：Australia · 实时数据</div>
-  <div class="header-stats">
-    <div class="stat-badge"><div class="num">27</div><div class="label">机会点项目</div></div>
-    <div class="stat-badge"><div class="num">31</div><div class="label">线索项目</div></div>
-    <div class="stat-badge"><div class="num" id="total-cap-opp">—</div><div class="label">机会点总容量 (MW)</div></div>
-    <div class="stat-badge"><div class="num" id="total-cap-leads">—</div><div class="label">线索总容量 (MW)</div></div>
-    <div class="stat-badge"><div class="num" id="opp-active">—</div><div class="label">机会点 Active</div></div>
-    <div class="stat-badge"><div class="num" id="leads-active">—</div><div class="label">线索 Active</div></div>
-  </div>
-</div>
-
-<!-- ═══════════ SECTION 1: 机会点 ═══════════ -->
-<div class="section section-opp">
-  <div class="section-title">
-    🏗️ 机会点项目（Opportunity）
-    <span style="font-size:13px;font-weight:400;color:#94a3b8;">· 27 个项目 · 来源：机会点项目运作管理(PJTBidding)</span>
-  </div>
-
-  <div class="legend">
-    <span style="color:#7dd3fc;font-size:11.5px;font-weight:600;margin-right:4px;">阶段：</span>
-    <span class="legend-item"><span class="legend-dot" style="background:#0e7490;"></span>SS2 标前引导</span>
-    <span class="legend-item"><span class="legend-dot" style="background:#059669;"></span>SS3 投标</span>
-    <span class="legend-item"><span class="legend-dot" style="background:#16a34a;"></span>SS5 履约</span>
-    <span style="color:#7dd3fc;font-size:11.5px;font-weight:600;margin-left:12px;margin-right:4px;">状态：</span>
-    <span class="legend-item"><span class="legend-dot" style="background:#059669;"></span>Active</span>
-    <span class="legend-item"><span class="legend-dot" style="background:#3b82f6;"></span>Contract Signed</span>
-    <span class="legend-item"><span class="legend-dot" style="background:#f59e0b;"></span>Suspend</span>
-    <span class="legend-item"><span class="legend-dot" style="background:#dc2626;"></span>Bid Lost</span>
-    <span style="color:#7dd3fc;font-size:11.5px;font-weight:600;margin-left:12px;margin-right:4px;">Win Rate：</span>
-    <span class="legend-item"><span class="legend-dot" style="background:#16a34a;"></span>High</span>
-    <span class="legend-item"><span class="legend-dot" style="background:#3b82f6;"></span>Medium</span>
-    <span class="legend-item"><span class="legend-dot" style="background:#ea580c;"></span>Low</span>
-    <span class="legend-item"><span class="legend-dot" style="background:#475569;"></span>TBD</span>
-  </div>
-
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>👤 客户名</th>
-          <th>📋 项目简称</th>
-          <th>⚡ 容量(MW)</th>
-          <th>📊 项目阶段</th>
-          <th>🚦 运作状态与结果</th>
-          <th>🎯 Win Rate</th>
-          <th>📅 预计订单</th>
-          <th>🔧 预计NTP</th>
-          <th>💬 关键客户诉求</th>
-          <th>⚔️ 竞争分析</th>
-          <th>📝 最新进展</th>
-          <th>👉 下一步计划</th>
-        </tr>
-      </thead>
-      <tbody id="opp-body"></tbody>
-    </table>
-  </div>
-</div>
-
-<!-- ═══════════ SECTION 2: 线索 ═══════════ -->
-<div class="section section-leads">
-  <div class="section-title">
-    🔍 线索项目（Leads）
-    <span style="font-size:13px;font-weight:400;color:#94a3b8;">· 31 个项目 · 来源：线索管理及立项管理(Project) · 项目阶段=Leads</span>
-  </div>
-
-  <div class="legend">
-    <span style="color:#c4b5fd;font-size:11.5px;font-weight:600;margin-right:4px;">状态：</span>
-    <span class="legend-item"><span class="legend-dot" style="background:#059669;"></span>Active</span>
-    <span class="legend-item"><span class="legend-dot" style="background:#f59e0b;"></span>Suspend</span>
-    <span class="legend-item"><span class="legend-dot" style="background:#ef4444;"></span>Cancel</span>
-    <span style="color:#c4b5fd;font-size:11.5px;font-weight:600;margin-left:12px;margin-right:4px;">Win Rate：</span>
-    <span class="legend-item"><span class="legend-dot" style="background:#16a34a;"></span>High 75-100%</span>
-    <span class="legend-item"><span class="legend-dot" style="background:#3b82f6;"></span>Medium ~50%</span>
-    <span class="legend-item"><span class="legend-dot" style="background:#ea580c;"></span>Low 0-25%</span>
-    <span class="legend-item"><span class="legend-dot" style="background:#475569;"></span>TBD</span>
-    <span style="color:#c4b5fd;font-size:11.5px;font-weight:600;margin-left:12px;margin-right:4px;">容量颜色：</span>
-    <span class="legend-item"><span style="color:#fbbf24;font-weight:700;">■</span> ≥1000MW</span>
-    <span class="legend-item"><span style="color:#34d399;font-weight:700;">■</span> 500-999MW</span>
-    <span class="legend-item"><span style="color:#7dd3fc;font-weight:700;">■</span> 200-499MW</span>
-    <span class="legend-item"><span style="color:#a5b4fc;font-weight:700;">■</span> &lt;200MW</span>
-  </div>
-
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>👤 客户名</th>
-          <th>📋 项目简称</th>
-          <th>⚡ 容量(MW)</th>
-          <th>📌 项目阶段</th>
-          <th>🚦 运作状态</th>
-          <th>🎯 Win Rate</th>
-          <th>📅 预计订单</th>
-          <th>🔧 预计NTP</th>
-          <th>💬 关键客户诉求</th>
-          <th>⚔️ 竞争分析</th>
-          <th>📝 最新进展</th>
-          <th>👉 下一步计划</th>
-        </tr>
-      </thead>
-      <tbody id="leads-body"></tbody>
-    </table>
-  </div>
-</div>
-
-<div class="footer">
-  📆 数据截至 2025年7月 &nbsp;|&nbsp; 应用：国际风机线索与机会点项目管理 &nbsp;|&nbsp; 团队归属：Australia &nbsp;|&nbsp; 由 AI 问数助手生成
-</div>
-
-<script>
-const oppData = [
-  {client:"Neoen Australia",name:"Narrogin",cap:179.4,stage:"SS5",status:"Contract Signed",wr:"High : 75%-100%",order:"2025-10",ntp:"2026-07",req:null,comp:null,progress:"TSI subcontract with UGL expected to be signed today; then proceed to TSI & LTSA with Neoen shortly after.",nextstep:"Follow the TC to include Narrogin tower + Inside transformer before ITP (October). Jay, Orion"},
-  {client:"Fera Australlia",name:"Wombelano",cap:23.4,stage:"SS3",status:"Active",wr:"High : 75%-100%",order:"2027-04",ntp:"2027-11",req:null,comp:null,progress:"Grid team leading connection work with Powercor to prepare/submit grid connection application. Farah's president meeting with Kane at head office.",nextstep:null},
-  {client:"Brookfield Australia",name:"Moonlight",cap:320,stage:"SS3",status:"Project Close - Bid lost",wr:"Medium : around 50%",order:"2025-07",ntp:"2026-05",req:"250401 BAFO需求：澳大利亚Brookfield Moonlight Range项目，315MW风电+TBD MWh储能Hybrid项目，目前处于OEM 5选2阶段，评标只关注风电LCoE，本轮需报BAFO。",comp:"250418 业主反馈：上一轮报价我们排名第4，第1是金风7.8-182方案，LCoE比我们好2%，塔高150m，41台；业主建议我们要大幅度领先金风。",progress:"No further feedback",nextstep:null},
-  {client:"Windlab Pty Ltd",name:"Bungaban",cap:1193,stage:"SS3",status:"Active",wr:"High : 75%-100%",order:"2026-07",ntp:"2027-01",req:"1. 1000mm² cable to RMU\n2. 66KV Transformer\n3. Higher tower solution\n4. Reactive power derating curve\n5. 30yr lifetime solution\n6. Cable interface docs",comp:"Goldwind 8-180, Nordex 6.2-175",progress:"Submitted the best and final NBO",nextstep:"Tower transport frame design, and then update the tower parameter."},
-  {client:"CIP",name:"Murchison Green Hydrogen",cap:1200,stage:"SS3",status:"Active",wr:"Medium : around 50%",order:"2026-12",ntp:"2026-12",req:null,comp:"Vestas, Nordex? Goldwind?",progress:"AEP of 155HH and 140HH finish",nextstep:"Align with customer about project stage"},
-  {client:"EDF Renewables",name:"Whyte Yarcowie Wind Farm",cap:270,stage:"SS3",status:"Active",wr:"Medium : around 50%",order:"2027-01",ntp:"2027-03",req:null,comp:"GE, Goldwind, Vestas",progress:"Submission targeted for 30-July-2026",nextstep:null},
-  {client:"Someva Renewables Pty Ltd",name:"Hills of Gold Wind Farm",cap:420,stage:"SS3",status:"Active",wr:"High : 75%-100%",order:"2027-09",ntp:"2027-12",req:null,comp:"GW",progress:"Require granular feedback from customer to understand where 175/8 sits",nextstep:null},
-  {client:"WestWind Energy",name:"Lake Victoria Wind Farm",cap:1500,stage:"SS2",status:"Active",wr:"High : 75%-100%",order:"2028-06",ntp:"2027-12",req:null,comp:"Nordex and GW",progress:null,nextstep:null},
-  {client:"WestWind Energy",name:"Bottle Tree Energy Park",cap:400,stage:"SS2",status:"Active",wr:"High : 75%-100%",order:"2027-06",ntp:"2027-09",req:null,comp:null,progress:null,nextstep:null},
-  {client:"Green Wind Renewables",name:"Mahogany Wind Farm",cap:432,stage:"SS2",status:"Active",wr:"Low : 0-25%",order:"2026-12",ntp:"2027-03",req:null,comp:null,progress:"RFP in Jan. 2026",nextstep:null},
-  {client:"Cubico Sustainable Investments",name:"Middle Creek Energy Hub",cap:1100,stage:"SS2",status:"Active",wr:"Low : 0-25%",order:"2027-01",ntp:"2027-03",req:null,comp:null,progress:null,nextstep:null},
-  {client:"Cubico Sustainable Investments",name:"Marmadua Energy Hub",cap:450,stage:"SS2",status:"Active",wr:"Low : 0-25%",order:"2027-01",ntp:"2027-03",req:null,comp:null,progress:null,nextstep:null},
-  {client:"EDF Renewables",name:"Banana Range Wind Farm",cap:230,stage:"SS2",status:"Active",wr:"High : 75%-100%",order:"2026-10",ntp:"2026-11",req:null,comp:null,progress:"Need to confirm target price with updated WTG qty. Schedule BoP workshop with EDF (pending confirmation from Inland)",nextstep:null},
-  {client:"ACEN Australia Pty Ltd",name:"Robbins Island",cap:929,stage:"SS2",status:"Active",wr:"Medium : around 50%",order:"2026-12",ntp:"2027-03",req:null,comp:null,progress:"Offer has been well received. Envision is looking good to be shortlisted for this project",nextstep:null},
-  {client:"Spark Renewables",name:"Dinawan Wind Farm",cap:390,stage:"SS2",status:"Project Close - Bid lost",wr:"Low : 0-25%",order:"2025-09",ntp:"2026-12",req:null,comp:"Vestas, GW",progress:null,nextstep:null},
-  {client:"Fortescue",name:"Decarb Stage 2",cap:540,stage:"SS3",status:"Active",wr:"High : 75%-100%",order:"2026-07",ntp:"2026-09",req:"off-grid",comp:"Goldwind, MinYang, likely other Chinese OEMs with big machines",progress:"Focus is on getting the updated price out to Fortescue this week",nextstep:null},
-  {client:"Lacour Energy",name:"West Arthur Wind Farm",cap:500,stage:"SS2",status:"Project Close - Bid lost",wr:"TBD",order:"2026-10",ntp:"2026-12",req:null,comp:null,progress:null,nextstep:null},
-  {client:"EDL Energy",name:"Winu Wind Farm",cap:54.6,stage:"SS2",status:"Active",wr:"TBD",order:"2026-12",ntp:"2027-03",req:"off-grid",comp:null,progress:"RFP received. Align the two offers and prevent mismatch.",nextstep:null},
-  {client:"Contact Energy Limited",name:"Southland Wind Farm",cap:300,stage:"SS2",status:"Active",wr:"Medium : around 50%",order:"2026-12",ntp:"2027-03",req:null,comp:null,progress:"Need to align internally on prior to responding to Contact on the RCA and quality topics",nextstep:null},
-  {client:"Yindjibarndi Energy",name:"Baru Marnda Renewable Energy Project",cap:1000,stage:"SS2",status:"Active",wr:"Medium : around 50%",order:"2027-09",ntp:"2028-03",req:null,comp:null,progress:"Offer has been well received. Envision is looking good to be shortlisted for this project",nextstep:null},
-  {client:"Ark Energy",name:"Boomer Wind Farm",cap:1000,stage:"SS3",status:"Active",wr:"Medium : around 50%",order:"2026-10",ntp:"2028-06",req:null,comp:null,progress:"Moving to second round of RFP.",nextstep:null},
-  {client:"Lightsourcebp",name:"Narrogin East Hybrid Project",cap:212,stage:"SS2",status:"Active",wr:"Medium : around 50%",order:"2028-06",ntp:"2028-10",req:null,comp:null,progress:"175/8 pricing submitted. Waiting feedback on next steps start of August 2026",nextstep:null},
-  {client:"GreenPoint Energy",name:"Jackson North WF",cap:540,stage:"SS2",status:"Active",wr:"TBD",order:"2027-12",ntp:"2028-01",req:null,comp:null,progress:"Response required on CIS by this Wednesday 15th of July",nextstep:null},
-  {client:"Renewable Energy Systems",name:"Kerrs Creek Wind Farm",cap:396,stage:"SS2",status:"Active",wr:"Medium : around 50%",order:"2026-06",ntp:"2027-12",req:null,comp:null,progress:"Pricing is considered non-competitive.",nextstep:"Collect feedback from customers (RES, Tag, Someva, Squadron). Then hold L2 meeting to revise pricing for 175"},
-  {client:"TotalEnergies H2",name:"SEPHR",cap:460,stage:"SS2",status:"Active",wr:"TBD",order:"2028-06",ntp:"2028-11",req:"Competitive CAPEX and OPEX pricing",comp:"Envision is 1 of 3 bidders",progress:"TEH2 consider Envision well positioned to continue progressing. Customer further assessing BESS sizing requirements & grid model compliance.",nextstep:null},
-  {client:"TAG Energy",name:"Devlins Bridge Wind Farm",cap:680,stage:"SS2",status:"Active",wr:"TBD",order:"2026-06",ntp:"2028-03",req:"Need to meet LTESA and CIS requirements",comp:"Vestas, Goldwind and Nordex",progress:"Updated pricing submitted last Friday.",nextstep:null},
-  {client:"Synergy",name:"Tathra Wind Farm",cap:250,stage:"SS2",status:"Active",wr:"TBD",order:"2027-03",ntp:"2027-06",req:"Envision has been successful in progressing to the next round of the tender process",comp:"Assuming Vestas, Nordex and Goldwind",progress:"Need to respond to RFI's. Project briefing scheduled for tomorrow. Inland to confirm attendance at site visit",nextstep:null},
-];
-
-const leadsData = [
-  {client:"Alinta Energy",name:"Marri Wind Farm",cap:550,status:"Cancel",wr:"TBD",order:"2026-06",ntp:"2026-06",req:null,comp:null,progress:"Closed",nextstep:null},
-  {client:"Mainstream Renewable Power",name:"Harrami Wind Farm",cap:650,status:"Suspend",wr:"Low : 0-25%",order:"2027-12",ntp:"2028-03",req:null,comp:null,progress:"Mainstream have left the Australian market. Will be followed up with the new project owner once sold.",nextstep:null},
-  {client:"Energy Estate",name:"Hargraves Wind Farm",cap:300,status:"Active",wr:"TBD",order:"2026-06",ntp:"2027-04",req:"HH:\nLifetime:\nNoise:\nDeadline:",comp:null,progress:"Indicative offer submitted.",nextstep:"Ongoing discussion with customer around this project"},
-  {client:"Mint Renewables",name:"Nilgen Wind Farm",cap:300,status:"Active",wr:"TBD",order:"2026-12",ntp:"2028-03",req:null,comp:null,progress:"Meeting scheduled for tomorrow.",nextstep:null},
-  {client:"Metis Energy Limited",name:"Bendemeer Wind Farm",cap:380,status:"Active",wr:"TBD",order:"2028-07",ntp:"2028-08",req:"• Min/max rotor RPM\n• Cut-in & cut-out wind speeds\n• Power & thrust curves (multi air density)\n• 1/3 octave noise curves",comp:null,progress:null,nextstep:null},
-  {client:"Neoen Australia",name:"Goyder North Wind Farm",cap:300,status:"Suspend",wr:"Low : 0-25%",order:"2026-01",ntp:"2026-12",req:null,comp:null,progress:null,nextstep:null},
-  {client:"Element Zero",name:"Green Iron Wind Farm",cap:4000,status:"Active",wr:"Low : 0-25%",order:"2028-03",ntp:"2028-05",req:null,comp:null,progress:null,nextstep:null},
-  {client:"Blue Power Partners",name:"Karma Wind Farm",cap:700,status:"Active",wr:"TBD",order:"2028-04",ntp:"2028-09",req:null,comp:null,progress:"Slightly improved the price. No hurry",nextstep:null},
-  {client:"Blue Power Partners",name:"Wandoan Wind Farm",cap:500,status:"Active",wr:"TBD",order:"2027-12",ntp:"2029-09",req:null,comp:null,progress:"Slightly improved the price. No hurry",nextstep:null},
-  {client:"RATCH-Australia Corporation Pty Ltd",name:"Springlands Wind Farm",cap:800,status:"Active",wr:"Low : 0-25%",order:"2027-10",ntp:"2027-12",req:null,comp:null,progress:"Provide the update of 400MW or 600MW (We provided 800MW)",nextstep:"Will analysize after Windlab next week"},
-  {client:"Cleangen",name:"Llama Wind Farm",cap:1500,status:"Active",wr:"TBD",order:"2029-12",ntp:"2030-02",req:null,comp:null,progress:null,nextstep:null},
-  {client:"Cleangen",name:"Loxton Wind Farm",cap:300,status:"Active",wr:"TBD",order:"2028-12",ntp:"2029-02",req:null,comp:null,progress:null,nextstep:null},
-  {client:"Cleangen",name:"Dragonfly Wind Farm",cap:250,status:"Active",wr:"TBD",order:"2029-06",ntp:"2029-08",req:null,comp:null,progress:"Indicative price / AEP",nextstep:"Kickoff price today, target is End of next week"},
-  {client:"Someva Renewables Pty Ltd",name:"Morven Wind Farm",cap:null,status:"Active",wr:"TBD",order:"—",ntp:"—",req:null,comp:null,progress:null,nextstep:null},
-  {client:"DP Energy",name:"(DP Energy AU项目)",cap:null,status:"Active",wr:"TBD",order:"—",ntp:"2027-03",req:null,comp:null,progress:null,nextstep:"Provide the NBO this week"},
-  {client:"Greenleaf Renewables",name:"Stony Creek Wind Farm",cap:210.6,status:"Active",wr:"TBD",order:"2026-12",ntp:"2027-01",req:null,comp:null,progress:"AEP load",nextstep:null},
-  {client:"Tilt Renewables",name:"Boco Rock WF2",cap:156,status:"Cancel",wr:"TBD",order:"2027-09",ntp:"2027-11",req:null,comp:null,progress:"Participated in Technical Due Diligence. This project was a No-Bid as it is not a good fit for our WTG.",nextstep:null},
-  {client:"StorEnergy",name:"Kentbruck Green Power Hub",cap:600,status:"Active",wr:"TBD",order:"2027-09",ntp:"2027-12",req:null,comp:null,progress:"Cost finished. L2 today.",nextstep:null},
-  {client:"Sumitomo",name:"Maradong",cap:300,status:"Active",wr:"TBD",order:"2026-12",ntp:"2027-03",req:null,comp:null,progress:null,nextstep:null},
-  {client:"Squadron Energy",name:"Moreton Hill",cap:500,status:"Active",wr:"TBD",order:"2028-09",ntp:"2028-11",req:null,comp:null,progress:"Updated pricing also submitted last Friday.",nextstep:null},
-  {client:"TAG Energy",name:"Goombi Wind Farm",cap:800,status:"Active",wr:"TBD",order:"2028-03",ntp:"2028-06",req:null,comp:null,progress:"Updated pricing submitted last Friday.",nextstep:null},
-  {client:"Warradarge Energy",name:"Warradarge South WF",cap:1000,status:"Active",wr:"TBD",order:"2027-09",ntp:"2028-03",req:null,comp:null,progress:"Provided updated layout and AEP;",nextstep:null},
-  {client:"Alinta Energy",name:"Ben Bullen Wind Farm",cap:461,status:"Active",wr:"TBD",order:"2029-03",ntp:"2029-05",req:null,comp:null,progress:"Wind data received. Customer has requested a smaller MW WTG from a wind resource perspective.",nextstep:"Need to review to check feasibility for 182/7.8. Provide some modelling and feedback."},
-  {client:"Mercury",name:"Rangitaiki",cap:400,status:"Active",wr:"TBD",order:"2027-03",ntp:"2027-09",req:null,comp:null,progress:"Ongoing clarifications with the customer on the wind data. Will submit layout and AEP once confirmed",nextstep:null},
-  {client:"AGL",name:"Twin Hills Wind Farm",cap:750,status:"Active",wr:"TBD",order:"2027-12",ntp:"2028-03",req:null,comp:null,progress:null,nextstep:"Continue chasing customer for layout."},
-  {client:"Tilt Renewables",name:"Nonowie",cap:800,status:"Active",wr:"TBD",order:"2028-09",ntp:"2028-11",req:null,comp:null,progress:null,nextstep:null},
-  {client:"Tilt Renewables",name:"Central Midlands",cap:1100,status:"Active",wr:"TBD",order:"2028-12",ntp:"2029-11",req:null,comp:null,progress:null,nextstep:"Need to respond on CIS requirements"},
-  {client:"European Energy",name:"Mincha Wind Farm",cap:250,status:"Active",wr:"TBD",order:"2027-12",ntp:"2028-07",req:null,comp:null,progress:"RFP has been received.",nextstep:"Assign solution lead and work closely with BESS team to propose hybrid solution."},
-];
-
-// helpers
-function stageCls(s){
-  if(!s)return'';
-  const m={SS1:'ss1',SS2:'ss2',SS3:'ss3',SS4:'ss4',SS5:'ss5',SS6:'ss6',SS7:'ss7'};
-  for(const k in m)if(s.startsWith(k))return m[k];
-  return'';
-}
-function stageLbl(s){
-  if(!s)return'Leads';
-  const m={SS1:'SS1 线索',SS2:'SS2 标前引导',SS3:'SS3 投标',SS4:'SS4 合同谈判',SS5:'SS5 履约',SS6:'SS6 运维',SS7:'SS7 关闭'};
-  for(const k in m)if(s.startsWith(k))return m[k];
-  return s;
-}
-function statusBadge(s){
-  if(!s)return'<span class="empty">—</span>';
-  const m={'Active':['s-active','🟢 Active'],'Contract Signed':['s-signed','🔵 Contract Signed'],'Bid shortlisted':['s-shortlisted','🔷 Shortlisted'],'Pre-awarded bid':['s-preawarded','✅ Pre-awarded'],'Bid awarded':['s-awarded','🏆 Awarded'],'Suspend':['s-suspend','⏸️ Suspend'],'Cancel':['s-cancel','❌ Cancel'],'Project Close - Bid lost':['s-bidlost','💔 Bid Lost'],'Project Close - Customer ':['s-close-cust','🔚 Close-Cust']};
-  const e=m[s];
-  return e?`<span class="badge ${e[0]}">${e[1]}</span>`:`<span class="badge s-active">${s}</span>`;
-}
-function wrBadge(w){
-  if(!w)return'<span class="empty">—</span>';
-  if(w.startsWith('High'))return'<span class="badge wr-high">🔥 High</span>';
-  if(w.startsWith('Medium'))return'<span class="badge wr-medium">⚖️ Medium</span>';
-  if(w.startsWith('Low'))return'<span class="badge wr-low">📉 Low</span>';
-  return'<span class="badge wr-tbd">❔ TBD</span>';
-}
-function capCls(c){
-  if(c==null)return'cap';
-  if(c>=1000)return'cap cap-xl';if(c>=500)return'cap cap-l';if(c>=200)return'cap cap-m';return'cap cap-s';
-}
-function rowCls(d){
-  const s=d.status||'';
-  if(d.stage==='SS5'||s==='Contract Signed')return'row-ss5';
-  if(s==='Project Close - Bid lost')return'row-bidlost';
-  if(s==='Cancel')return'row-cancel';
-  if(s==='Suspend')return'row-suspend';
-  return'';
-}
-function txt(v,cls=''){
-  if(!v)return'<span class="empty">—</span>';
-  const e=String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
-  return`<div class="txt-cell ${cls}">${e}</div>`;
-}
-
-function renderOpp(data,tid){
-  const tb=document.getElementById(tid);
-  tb.innerHTML=data.map((d,i)=>`<tr class="${rowCls(d)}">
-    <td style="color:#4b5563;font-size:11px;">${i+1}</td>
-    <td><span class="client">${d.client}</span></td>
-    <td><span class="pjtname">${d.name}</span></td>
-    <td><span class="${capCls(d.cap)}">${d.cap!=null?d.cap.toLocaleString():'—'}</span></td>
-    <td><span class="badge ${stageCls(d.stage)}">${stageLbl(d.stage)}</span></td>
-    <td>${statusBadge(d.status)}</td>
-    <td>${wrBadge(d.wr)}</td>
-    <td><span class="date">${d.order||'—'}</span></td>
-    <td><span class="date">${d.ntp||'—'}</span></td>
-    <td>${txt(d.req,'txt-cell-compact')}</td>
-    <td>${txt(d.comp,'txt-cell-compact')}</td>
-    <td>${txt(d.progress,'txt-cell-compact')}</td>
-    <td>${txt(d.nextstep,'txt-cell-compact')}</td>
-  </tr>`).join('');
-}
-function renderLeads(data,tid){
-  const tb=document.getElementById(tid);
-  tb.innerHTML=data.map((d,i)=>`<tr class="${rowCls(d)}">
-    <td style="color:#4b5563;font-size:11px;">${i+1}</td>
-    <td><span class="client">${d.client}</span></td>
-    <td><span class="pjtname">${d.name}</span></td>
-    <td><span class="${capCls(d.cap)}">${d.cap!=null?d.cap.toLocaleString():'—'}</span></td>
-    <td><span class="badge leads-badge">🔍 Leads</span></td>
-    <td>${statusBadge(d.status)}</td>
-    <td>${wrBadge(d.wr)}</td>
-    <td><span class="date">${d.order||'—'}</span></td>
-    <td><span class="date">${d.ntp||'—'}</span></td>
-    <td>${txt(d.req,'txt-cell-compact')}</td>
-    <td>${txt(d.comp,'txt-cell-compact')}</td>
-    <td>${txt(d.progress,'txt-cell-compact')}</td>
-    <td>${txt(d.nextstep,'txt-cell-compact')}</td>
-  </tr>`).join('');
-}
-
-const oppCap=oppData.reduce((s,d)=>s+(d.cap||0),0);
-const leadsCap=leadsData.reduce((s,d)=>s+(d.cap||0),0);
-const oppActive=oppData.filter(d=>d.status==='Active').length;
-const leadsActive=leadsData.filter(d=>d.status==='Active').length;
-document.getElementById('total-cap-opp').textContent=oppCap.toLocaleString();
-document.getElementById('total-cap-leads').textContent=leadsCap.toLocaleString();
-document.getElementById('opp-active').textContent=oppActive;
-document.getElementById('leads-active').textContent=leadsActive;
-
-renderOpp(oppData,'opp-body');
-renderLeads(leadsData,'leads-body');
-</script>
-</body>
+    <script src="/vendors.988e1cc6.async.js"></script>
+    <script src="/umi.92946e4b.js"></script>
+  </body>
 </html>
+
